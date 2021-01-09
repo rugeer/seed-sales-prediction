@@ -1,5 +1,6 @@
-# seed-sales-prediction
-Predict sales of flower seeds for one year
+# Seed sales prediction algorithm and web service
+
+Predict sales of flower seeds for one year (12 months)
 
 ## Setup
 
@@ -21,20 +22,14 @@ pip install git+https://github.com/rugeer/seed-sales-prediction.git
 
 ### Start the web-service
 
-- Start the server. By default host is 127.0.0.1 and port is 5000. You can change this, use the `--help` command to find
-the parameters.
+- Start the server. By default host is 127.0.0.1 and port is 5000. You can change this, see the 
+  [Command-line options](#Command-line options) section
 
 ```bash
 start-seed-sales-predictor-server 
 ```
 
-- Then visit `http://127.0.0.1:5000/docs` to see the interactive API docs 
-
-- You can run to see the available parameters 
-
-```bash 
-start-seed-sales-predictor-server --help
-```
+- Then visit [http://127.0.0.1:5000/docs](http://127.0.0.1:5000/docs) to see the interactive API docs 
 
 ### Command-line options
 
