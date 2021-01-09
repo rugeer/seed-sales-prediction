@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 packages = [
     "click==7.1.2",
@@ -12,7 +12,7 @@ setup(name='Seed Sales Prediction Webservice',
       version='1.0',
       author='Robin',
       description='Web service for predicting seed sales for a year',
-      packages=['seed_sales_prediction'],
+      packages=find_packages('.', exclude=['tests', 'tests.*']),
       entry_points={
           'console_scripts': [
               'start-seed-sales-predictor-server=seed_sales_prediction.cli.main:app'
