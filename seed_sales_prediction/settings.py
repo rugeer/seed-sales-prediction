@@ -1,6 +1,12 @@
 #!python3
 # -*- coding: utf-8 -*-
+import os
+from os.path import expanduser
 
-DATABASE = 'sqlite:///seed-predictions.db'
+home = expanduser("~")
+
+sqlite_path = os.path.join(home, "seed-predictions.db")
+
+DATABASE = f"sqlite:///{sqlite_path}"
 DEBUG = True
-EXPECTED_MONTHLY_SALES_VARIANCE = 40  ## TODO: check with Fanda to find optimal value
+EXPECTED_MONTHLY_SALES_VARIANCE = 40  # TODO: check with Fanda to find optimal value
