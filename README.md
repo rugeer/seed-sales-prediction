@@ -5,11 +5,19 @@ Predict sales of flower seeds for one year
 
 ### Installation
 
+
 - Install the package from source as following
 
 ```bash
 pip install seed-sales-prediction-1.0.tar.gz
 ```
+
+- Or directly from git:
+
+```bash
+pip install git+https://github.com/rugeer/seed-sales-prediction.git
+```
+
 
 ### Start the web-service
 
