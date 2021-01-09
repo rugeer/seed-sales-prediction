@@ -51,6 +51,14 @@ Options:
 - If you specify custom host/port then just visit `http://<your_specified_host>:<your_specified_port>/docs`
 - The interactive website allows you to test the API's and see the schemas.
 
+## Reset
+
+- If you want to reset all the data, ie. start from beginning. Just remove the database as following:
+
+```bash
+rm ~/seed-predictions.db 
+```
+
 ## Theory
 
 - The model is based on Bayesian statistics for modeling the mean value of monthly sales using Normal conjugate priors.
