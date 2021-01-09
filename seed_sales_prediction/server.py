@@ -1,69 +1,44 @@
-import json
-from collections import namedtuple
+from typing import List, Optional
+from datetime import time
 
-from seed_sales_prediction.backend.db_interface import get_session
-from seed_sales_prediction.backend.database_schema import ModelParameters
+from pydantic import BaseModel
 
-from fastapi import FastAPI, Path
+from fastapi import FastAPI, Path, Body
 import pandas as pd
-from urllib import request
 
+from seed_sales_prediction.funcs import (get_prior_parameters, get_updated_parameters, process_dataset,
+                                         upload_updated_parameters, get_last_date_of_update)
 
 app = FastAPI()
 
 
-def get_dataset(url: str) -> pd.DataFrame:
-    with request.urlopen(url) as url:
-        data = json.loads(url.read().decode())
-
-    return pd.DataFrame.from_dict(data)
-
-
-def process_dataset(df: pd.DataFrame) -> pd.DataFrame:
-    df = df[
-        (df.direction == 'OUTBOUND') & (df.orderId is not None) &
-        (df.orderId != "") & (df.orderSecretKey is not None) &
-        (df.orderSecretKey != "")]
-
-    df = df[['quantity', 'createdAt']]
-    df['date'] = pd.to_datetime(df.createdAt, unit='ms')
-    df.drop('createdAt', axis=1, inplace=True)
-    df.set_index('date', inplace=True)
-    df.index = df.index.date
-    df.index.rename('date', inplace=True)
-
-    return df
+class NewData(BaseModel):
+    """API Schema for new data."""
+    direction: str
+    order_id: Optional[str]
+    order_secret_key: Optional[str]
+    quantity: int
+    created_at: time
 
 
-SeedInfo = namedtuple('SeedInfo', ['seed_id', 'mean', 'standard_deviation'])
 
 
-def get_prior_parameters(seed_id: str) -> SeedInfo:
-    with get_session() as sess:
-        seed_item = sess.query(ModelParameters).get(seed_id)
-
-        return SeedInfo(seed_item.seed_id, seed_item.mean, seed_item.standard_deviation)
-
-
-def upload_updated_parameters(seed_id: str, mean: float, standard_deviation: float) -> None:
-    with get_session() as sess:
-        seed_item = sess.query(ModelParameters).get(seed_id)
-        seed_item.mean = mean
-        seed_item.standard_deviation = standard_deviation
-
-
-ModelParams = namedtuple('ModelParams', ['mean', 'standard_deviation'])
-
-def get_updated_parameters(prior_model_params: ModelParams, new_data) -> ModelParams:
-    posterior_mu =
-    posterior_std =
-
-
-@app.put('/upload_data/{seed_id}/{json_url}')
+@app.put('/upload_data/{seed_id}')
 def insert_tray(seed_id: str = Path(..., description="The id/name of the seed."),
-                json_url: str = Path(..., description="The json url to get the data.")):
-
-    df = get_dataset(json_url)
+                new_data: List[NewData] = Body(
+                    ..., description="The json url to get the data. Data should be complete per each month, i.e., "
+                                     "should not upload half-month data only")):
+    latest_date = get_last_date_of_update(seed_id)
+    df = pd.DataFrame(new_data)
     df = process_dataset(df)
+    # only consider new data
+    if latest_date:
+        df = df[df.index > latest_date]  # TODO: check logic correct
+
     current_params = get_prior_parameters(seed_id)
+    posterior_params = get_updated_parameters(current_params, df)
+    upload_updated_parameters(posterior_params, latest_date=df.index.max())  # TODO: verify the date type is correct
+
+
+
 

@@ -4,7 +4,8 @@ packages = [
     "click==7.1.2",
     "uvicorn==0.13.3",
     "fastapi==0.63.0",
-    "pandas==1.2.0"
+    "pandas==1.2.0",
+    "pydantic==1.7.3"
 ]
 
 setup(name='Seed Sales Prediction Webservice',

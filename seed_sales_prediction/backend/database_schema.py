@@ -1,5 +1,5 @@
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, String, Float
+from sqlalchemy import Column, String, Float, TIMESTAMP
 
 
 Base = declarative_base()
@@ -13,3 +13,4 @@ class ModelParameters(Base):
 
     mean = Column(Float, nullable=False, comment="The mean value in the normal distribution")
     standard_deviation = Column(Float, nullable=False, comment="The standard deviation in the normal distribution")
+    latest_date = Column(TIMESTAMP(), nullable=True, comment='Timestamp with latest date of data used for update.')
