@@ -49,4 +49,15 @@ Options:
 - Once you start the webserver just visit `http://127.0.0.1:5000/docs` for the default settings. 
 - This will load up interactive API documentation based on SwaggerAPI
 - If you specify custom host/port then just visit `http://<your_specified_host>:<your_specified_port>/docs`
-- The interactive website allows you to test the API's and see the schemas. 
+- The interactive website allows you to test the API's and see the schemas.
+
+## Theory
+
+- The model is based on Bayesian statistics for modeling the mean value of monthly sales using Normal conjugate priors.
+- The model parameters get updated with arrival of new monthly sales data for each month, and the model becomes more precise. 
+- The paper for calculating the posterior can be found [here](https://people.eecs.berkeley.edu/~jordan/courses/260-spring10/lectures/lecture5.pdf)
+- The modelling of yearly sales is based on the property of normal distributions where the summations of normals is also a normal
+- The 95% predictive interval is based on the yearly sales normal distribution. 
+- Currently, I set a fixed value for standard deviation of the monthly sales
+  (the EXPECTED_MONTHLY_SALES_VARIANCE variable in settings.py), which is not very precise (just a best guess), 
+  so in the next iteration, this variable should be random as well (also in the paper).
