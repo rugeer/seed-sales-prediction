@@ -1,10 +1,10 @@
 #!python3
 # -*- coding: utf-8 -*-
 """An interface for communicating with SQL database."""
-from typing import ContextManager
 import contextlib
+from typing import ContextManager
 
-from sqlalchemy import orm, create_engine
+from sqlalchemy import create_engine, orm
 
 from seed_sales_prediction.backend.database_schema import Base
 from seed_sales_prediction.settings import DATABASE, DEBUG

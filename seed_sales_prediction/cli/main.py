@@ -1,7 +1,7 @@
 #!python3
 # -*- coding: utf-8 -*-
-import uvicorn
 import click
+import uvicorn
 
 
 @click.command()

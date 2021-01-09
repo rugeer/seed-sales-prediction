@@ -79,3 +79,16 @@ def get_last_date_of_update(seed_id: str) -> Optional[datetime]:
             return None
 
         return seed_item.latest_date
+
+
+Predictions = namedtuple('Predictions', ['expected_value', 'lower_bound_95', 'upper_bound_95'])
+
+
+def predict_one_year_sales(params: SeedInfo):
+    mu_one_year = params.mean * 12
+    var_one_year = (params.standard_deviation ** 2) * 12
+    lower_bound = mu_one_year - 2 * np.sqrt(var_one_year)
+    upper_bound = mu_one_year + 2 * np.sqrt(var_one_year)
+    return Predictions(expected_value=round(mu_one_year, 1),
+                       lower_bound_95=round(lower_bound, 1),
+                       upper_bound_95=round(upper_bound, 1))
