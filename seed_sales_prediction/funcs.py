@@ -13,15 +13,15 @@ from seed_sales_prediction.settings import EXPECTED_MONTHLY_SALES_VARIANCE
 def process_dataset(df: pd.DataFrame) -> pd.DataFrame:
     df = df[
         (df.direction == "OUTBOUND")
-        & (df.orderId is not None)
-        & (df.orderId != "")
-        & (df.orderSecretKey is not None)
-        & (df.orderSecretKey != "")
+        & (df.order_id is not None)
+        & (df.order_id != "")
+        & (df.order_secret_key is not None)
+        & (df.order_secret_key != "")
     ]
 
-    df = df[["quantity", "createdAt"]]
-    df["date"] = pd.to_datetime(df.createdAt, unit="ms")
-    df.drop("createdAt", axis=1, inplace=True)
+    df = df[["quantity", "created_at"]]
+    df["date"] = pd.to_datetime(df.created_at, unit="ms")
+    df.drop("created_at", axis=1, inplace=True)
     df.set_index("date", inplace=True)
 
     return df
@@ -71,12 +71,8 @@ def get_updated_parameters(
     prior_mu = prior_model_params.mean
     prior_var = prior_model_params.standard_deviation ** 2
 
-    monthly_data = new_data.groupby(pd.Grouper(freq="M")).aggregate(
-        ["sum", "len", "var"]
-    )[
-        "quantity"
-    ]  # type: pd.DataFrame
-    sum_x = monthly_data["sum"].sum()
+    monthly_data = new_data.groupby(pd.Grouper(freq="M")).sum()
+    sum_x = monthly_data.sum().values[0]
     n_samples = monthly_data.shape[0]
 
     posterior_var = 1 / (1 / prior_var + n_samples / EXPECTED_MONTHLY_SALES_VARIANCE)

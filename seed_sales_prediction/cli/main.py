@@ -13,3 +13,7 @@ def app(port, host):
     uvicorn.run(
         "seed_sales_prediction.server:app", host=host, port=port, log_level="info"
     )
+
+
+if __name__ == "__main__":
+    app()
